@@ -32,9 +32,11 @@ function startup() {
           break;
         case "View All Roles":
           console.log("view all roles");
+          viewAllRoles();
           break;
-        case "View All Departments":
+        case "View All Employees":
           console.log("view all employees");
+          viewAllEmployees();
           break;
         case "Add A Department":
           console.log("add dpt");
@@ -53,11 +55,29 @@ function startup() {
 
 function viewAllDepartments() {
   //build the sql query
-  sql = `SELECT * FROM department`;
   db.query(`SELECT * FROM department`, function (err, results, fields) {
     //console.log(results);
     console.table(results); //<== this is what we are interested in
     //console.log(fields);
+    startup();
+  });
+}
+
+function viewAllRoles() {
+  //build the sql query
+  db.query(`SELECT * FROM role`, function (err, results, fields) {
+    console.table(results); //<== this is what we are interested in
+    //console.log(fields);
+    startup();
+  });
+}
+
+function viewAllEmployees() {
+  //build the sql query
+  db.query(`SELECT * FROM employee`, function (err, results, fields) {
+    console.table(results); //<== this is what we are interested in
+    //console.log(fields);
+    startup();
   });
 }
 startup();
