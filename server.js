@@ -40,15 +40,19 @@ function startup() {
           break;
         case "Add A Department":
           console.log("add dpt");
+          addDepartment();
           break;
         case "Add A Role":
           console.log("Add role");
+          addRole();
           break;
         case "Add An Employee":
           console.log("add employee");
+          addEmployee();
           break;
         case "Update An Employee Role":
           console.log("update employee");
+          updateEmployee();
       }
     });
 }
@@ -79,5 +83,119 @@ function viewAllEmployees() {
     //console.log(fields);
     startup();
   });
+}
+
+function addDepartment() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "departmentName",
+        message: "What is the name of the department?",
+      },
+    ])
+    .then((answers) => {
+      db.query(
+        `INSERT INTO department(name) VALUES(?)`,
+        [answers.departmentName],
+        function (err, results, fields) {
+          console.log(results);
+          startup();
+        }
+      );
+    });
+}
+
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "roleName",
+        message: "What is the title of the role?",
+      },
+      {
+        type: "input",
+        name: "roleSalary",
+        message: "What is the salary of the role?",
+      },
+      {
+        type: "input",
+        name: "roleDepartment",
+        message: "What department does this role belong to?",
+      },
+    ])
+    .then((answers) => {
+      db.query(
+        `INSERT INTO role(title, salary, department_id) VALUES(?,?,?)`,
+        [answers.roleName, answers.roleSalary, answers.roleDepartment],
+        function (err, results, fields) {
+          console.log(results);
+          startup();
+        }
+      );
+    });
+}
+
+function addEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "firstName",
+        message: "What is the first name?",
+      },
+      {
+        type: "input",
+        name: "lastName",
+        message: "What is the last name?",
+      },
+      {
+        type: "input",
+        name: "role",
+        message: "What is the role?",
+      },
+      {
+        type: "number",
+        name: "manager ",
+        message: "What who is the manager?",
+      },
+    ])
+    .then((answers) => {
+      db.query(
+        `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES(?,?,?,?)`,
+        [answers.firstName, answers.lastName, answers.role, answers.manager],
+        function (err, results, fields) {
+          console.log(results);
+          startup();
+        }
+      );
+    });
+}
+
+function updateEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "number",
+        name: "employeeId",
+        message: "Which employee would you like to update?",
+      },
+      {
+        type: "number",
+        name: "newRole",
+        message: "What is the new role?",
+      },
+    ])
+    .then((answers) => {
+      db.query(
+        `UPDATE employee SET role_id = ? WHERE id = ?`,
+        [answers.employeeId, answers.newRole],
+        function (err, results, fields) {
+          console.log(results);
+          startup();
+        }
+      );
+    });
 }
 startup();
