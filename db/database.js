@@ -6,3 +6,6 @@ const connection = mysql.createConnection({
   password: "2000Vt!2000",
   database: "employees",
 });
+console.log("connection successfull");
+
+module.exports = connection;

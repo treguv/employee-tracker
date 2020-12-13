@@ -1,6 +1,7 @@
 const express = require("express");
 const db = require("./db/database");
 const inquirer = require("inquirer");
+const cTable = require("console.table");
 
 // all possible questions
 function startup() {
@@ -27,6 +28,7 @@ function startup() {
       switch (response.currentAction) {
         case "View All Departments":
           console.log("view all dpt");
+          viewAllDepartments();
           break;
         case "View All Roles":
           console.log("view all roles");
@@ -47,5 +49,15 @@ function startup() {
           console.log("update employee");
       }
     });
+}
+
+function viewAllDepartments() {
+  //build the sql query
+  sql = `SELECT * FROM department`;
+  db.query(`SELECT * FROM department`, function (err, results, fields) {
+    //console.log(results);
+    console.table(results); //<== this is what we are interested in
+    //console.log(fields);
+  });
 }
 startup();
