@@ -23,35 +23,35 @@ function startup() {
       },
     ])
     .then((response) => {
-      console.log(response);
+      //console.log(response);
       //set up cases to do each of the things
       switch (response.currentAction) {
         case "View All Departments":
-          console.log("view all dpt");
+          //console.log("view all dpt");
           viewAllDepartments();
           break;
         case "View All Roles":
-          console.log("view all roles");
+          //console.log("view all roles");
           viewAllRoles();
           break;
         case "View All Employees":
-          console.log("view all employees");
+          //console.log("view all employees");
           viewAllEmployees();
           break;
         case "Add A Department":
-          console.log("add dpt");
+          //console.log("add dpt");
           addDepartment();
           break;
         case "Add A Role":
-          console.log("Add role");
+          //console.log("Add role");
           addRole();
           break;
         case "Add An Employee":
-          console.log("add employee");
+          //console.log("add employee");
           addEmployee();
           break;
         case "Update An Employee Role":
-          console.log("update employee");
+          //console.log("update employee");
           updateEmployee();
       }
     });
@@ -99,7 +99,7 @@ function addDepartment() {
         `INSERT INTO department(name) VALUES(?)`,
         [answers.departmentName],
         function (err, results, fields) {
-          console.log(results);
+          //console.log(results);
           startup();
         }
       );
@@ -130,7 +130,7 @@ function addRole() {
         `INSERT INTO role(title, salary, department_id) VALUES(?,?,?)`,
         [answers.roleName, answers.roleSalary, answers.roleDepartment],
         function (err, results, fields) {
-          console.log(results);
+          //console.log(results);
           startup();
         }
       );
@@ -157,19 +157,39 @@ function addEmployee() {
       },
       {
         type: "number",
-        name: "manager ",
-        message: "What who is the manager?",
+        name: "manager",
+        message: "What who is the manager(Press enter for none)?",
       },
     ])
     .then((answers) => {
-      db.query(
-        `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES(?,?,?,?)`,
-        [answers.firstName, answers.lastName, answers.role, answers.manager],
-        function (err, results, fields) {
-          console.log(results);
-          startup();
-        }
-      );
+      let paramArray = [];
+      if (answers.manager) {
+        paramArray = [
+          answers.firstName,
+          answers.lastName,
+          answers.role,
+          answers.manager,
+        ];
+
+        db.query(
+          `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES(?,?,?,?)`,
+          paramArray,
+          function (err, results, fields) {
+            //console.log(results);
+            startup();
+          }
+        );
+      } else {
+        paramArray = [answers.firstName, answers.lastName, answers.role];
+        db.query(
+          `INSERT INTO employee(first_name, last_name, role_id) VALUES(?,?,?)`,
+          paramArray,
+          function (err, results, fields) {
+            //console.log(results);
+            startup();
+          }
+        );
+      }
     });
 }
 
@@ -190,9 +210,9 @@ function updateEmployee() {
     .then((answers) => {
       db.query(
         `UPDATE employee SET role_id = ? WHERE id = ?`,
-        [answers.employeeId, answers.newRole],
+        [answers.newRole, answers.employeeId], // 1 "1"
         function (err, results, fields) {
-          console.log(results);
+          //console.log(results);
           startup();
         }
       );
